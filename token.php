@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$url = "https://10.5.0.20:8043/0a98965885f4db539c6d058a3edf47e5/openapi/authorize/token";
+$url = "https://10.5.0.20:8043/openapi/authorize/token";
 
 $ch = curl_init();
 
