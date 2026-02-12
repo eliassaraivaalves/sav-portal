@@ -9,12 +9,15 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-// 🔥 DESATIVA VERIFICAÇÃO SSL
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+// 🔥 ENVIAR COMO JSON
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Content-Type: application/json"
+]);
+
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     "grant_type" => "client_credentials",
     "client_id" => "859ee53945344ca0a61f3feb9f6cf0e2",
     "client_secret" => "72efa96f5bde4f0babc3edf31db6a777"
