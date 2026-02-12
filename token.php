@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $url = "https://10.5.0.20:8043/0a98965885f4db539c6d058a3edf47e5/openapi/authorize/token";
 
@@ -17,8 +19,12 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
 
 $response = curl_exec($ch);
 
+if($response === false){
+    echo "Erro CURL: " . curl_error($ch);
+}
+
 curl_close($ch);
 
 echo "<pre>";
-print_r($response);
+var_dump($response);
 echo "</pre>";
