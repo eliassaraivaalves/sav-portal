@@ -1,6 +1,6 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "sva");
+$conn = new mysqli("localhost", "root", "", "sav");
 
 if ($conn->connect_error) {
     die("Erro: " . $conn->connect_error);
