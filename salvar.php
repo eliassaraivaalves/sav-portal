@@ -1,5 +1,5 @@
 <?php
-require "config.php";
+require_once "config.php";
 
 // Conectar banco
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
