@@ -18,56 +18,55 @@ function prepararCurl($url){
     return $ch;
 }
 
-echo "<hr><b>1 - TESTANDO CURL</b><br>";
-
-if(!function_exists('curl_init')){
-    die("❌ CURL NÃO ESTÁ ATIVADO NO PHP");
-}
-
-echo "✅ CURL OK<br>";
-
-echo "<hr><b>2 - TESTANDO CONEXÃO COM OMADA</b><br>";
+echo "<hr><b>1 - TESTANDO CONEXÃO</b><br>";
 
 $ch = prepararCurl(OMADA_URL);
 $response = curl_exec($ch);
 
 if($response === false){
-    die("❌ ERRO AO CONECTAR NO OMADA: " . curl_error($ch));
+    die("❌ ERRO AO CONECTAR: " . curl_error($ch));
 }
 
-echo "✅ SERVIDOR OMADA RESPONDE<br>";
+echo "✅ SERVIDOR RESPONDE<br>";
 curl_close($ch);
 
-echo "<hr><b>3 - PEGANDO TOKEN</b><br>";
+echo "<hr><b>2 - PEGANDO TOKEN CORRETO</b><br>";
 
-$url = OMADA_URL . "/openapi/authorize/token";
+$url = OMADA_URL . "/openapi/authorize/token?grant_type=client_credentials";
 
 $data = [
     "client_id" => CLIENT_ID,
     "client_secret" => CLIENT_SECRET,
-    "grant_type" => "client_credentials"
+    "omadId" => OMADA_ID
 ];
 
 $ch = prepararCurl($url);
+
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Content-Type: application/x-www-form-urlencoded"
+]);
 
 $response = curl_exec($ch);
 
 $result = json_decode($response, true);
 
+echo "<pre>";
+print_r($result);
+echo "</pre>";
+
 if(!isset($result['access_token'])){
-    echo "<pre>";
-    print_r($result);
-    die("❌ NÃO CONSEGUIU PEGAR TOKEN");
+    die("❌ FALHA AO OBTER TOKEN");
 }
 
 $token = $result['access_token'];
 
 echo "✅ TOKEN RECEBIDO<br>";
+
 curl_close($ch);
 
-echo "<hr><b>4 - CRIANDO VOUCHER TESTE</b><br>";
+echo "<hr><b>3 - CRIANDO VOUCHER TESTE</b><br>";
 
 $url = OMADA_URL . "/openapi/v1/".OMADA_ID."/sites/".SITE_ID."/hotspot/vouchers";
 
