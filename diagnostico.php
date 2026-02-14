@@ -10,6 +10,14 @@ define('CLIENT_SECRET', '8fed75756f6c4ea9bb126ef972accd3e');
 define('OMADA_ID', '0a98965885f4db539c6d058a3edf47e5');
 define('SITE_ID', 'HRVJ');
 
+function prepararCurl($url){
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    return $ch;
+}
+
 echo "<hr><b>1 - TESTANDO CURL</b><br>";
 
 if(!function_exists('curl_init')){
@@ -20,9 +28,7 @@ echo "✅ CURL OK<br>";
 
 echo "<hr><b>2 - TESTANDO CONEXÃO COM OMADA</b><br>";
 
-$ch = curl_init(OMADA_URL);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+$ch = prepararCurl(OMADA_URL);
 $response = curl_exec($ch);
 
 if($response === false){
@@ -42,18 +48,11 @@ $data = [
     "grant_type" => "client_credentials"
 ];
 
-$ch = curl_init($url);
-
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$ch = prepararCurl($url);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 $response = curl_exec($ch);
-
-if($response === false){
-    die("❌ ERRO AO PEGAR TOKEN: " . curl_error($ch));
-}
 
 $result = json_decode($response, true);
 
@@ -66,7 +65,6 @@ if(!isset($result['access_token'])){
 $token = $result['access_token'];
 
 echo "✅ TOKEN RECEBIDO<br>";
-
 curl_close($ch);
 
 echo "<hr><b>4 - CRIANDO VOUCHER TESTE</b><br>";
@@ -84,19 +82,12 @@ $headers = [
     "Content-Type: application/json"
 ];
 
-$ch = curl_init($url);
-
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$ch = prepararCurl($url);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 $response = curl_exec($ch);
-
-if($response === false){
-    die("❌ ERRO AO CRIAR VOUCHER: " . curl_error($ch));
-}
 
 echo "<pre>";
 print_r(json_decode($response, true));
